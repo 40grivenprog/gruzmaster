@@ -5,10 +5,10 @@
         <router-link to="/">Gruzmaster</router-link>
       </h1>
       <ul>
-        <li>
+        <li v-if="!isLoggedIn">
           <router-link to="/auth">Login</router-link>
         </li>
-        <li>
+        <li v-else>
           <base-button @click="logout">Logout</base-button>
         </li>
       </ul>
@@ -28,7 +28,7 @@ export default {
   methods: {
     logout() {
       this.$store.dispatch('logout');
-      this.$router.replace('/coaches');
+      this.$router.replace('/auth');
     }
   }
 }

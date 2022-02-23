@@ -16,7 +16,7 @@ export default {
     TheHeader
   },
   created() {
-    // this.$store.dispatch('tryLogin');
+    this.$store.dispatch('tryLogin');
   }  
 }
 </script>

@@ -5,7 +5,28 @@ export default {
       mode: 'login'
     })
   },
-  logout(context) {
+  async logout(context) {
+    let headers = {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${context.rootGetters.token}`
+    }
+
+    let url = 'http://localhost:3000/users/sign_out';
+
+    const response = await fetch(url, {
+      method: 'DELETE',
+      headers: headers
+      })
+
+      const responseData = await response.json();
+
+      if (!response.ok) {
+        console.log(responseData);
+        const error = new Error(responseData.message || 'Failed to log out.');
+        throw error;
+      }
+
+
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
     
@@ -23,17 +44,29 @@ export default {
   },
   async auth(context, payload) {
     const mode = payload.mode;
-    let url = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyA37NtsnRpuZwoPYnADXO4u5Ya--5MBLBI';
+    
+    let headers = {
+      "Content-Type": "application/json",
+    }
+
+    let url = 'http://localhost:3000/users/sign_in';
 
     if (mode === 'signup'){
-      url = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyA37NtsnRpuZwoPYnADXO4u5Ya--5MBLBI';
+      url = 'http://localhost:3000/users';
+      headers = {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      }
     }
+
     const response = await fetch(url, {
       method: 'POST',
+      headers: headers,
       body: JSON.stringify({
-        email: payload.email,
-        password: payload.password,
-        returnSecureToken: true
+        user: {
+          email: payload.email,
+          password: payload.password,
+        }
       })
       })
 
@@ -44,14 +77,14 @@ export default {
         const error = new Error(responseData.message || 'Failed to authenticate.');
         throw error;
       }
-      
-      localStorage.setItem('token', responseData.idToken);
-      localStorage.setItem('userId', responseData.userId);
+
+      localStorage.setItem('token', responseData.token);
+      localStorage.setItem('userId', responseData.user_id);
 
       console.log(responseData);
       context.commit('setUser', {
-        token: responseData.idToken,
-        userId: responseData.localId,
+        token: responseData.token,
+        userId: responseData.user_id,
         tokenExpiration: responseData.expiresIn
       })
     },

@@ -83,7 +83,7 @@ export default {
             password: this.password
           })
         }
-        const redirectUrl = '/' + (this.$route.query.redirect || 'coaches');
+        const redirectUrl = '/' + (this.$route.query.redirect || 'members');
         this.$router.replace(redirectUrl );
       } catch (err) {
         this.error = err.message || 'Failed to authenticate.'
