@@ -1,0 +1,14 @@
+version: '3.7'
+
+services:
+
+  gruzmaster_front:
+    container_name: gruzmaster_front
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - '.:/gruzmaster_front'
+      - '/gruzmaster_front/node_modules'
+    ports:
+      - '8080:8080'
