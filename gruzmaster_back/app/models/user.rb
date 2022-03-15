@@ -10,6 +10,7 @@ class User < ApplicationRecord
   after_create :set_default_role
 
   def set_default_role
-    roles.create(name: 'user', description: 'User')
+    user_role = Role.find_by(name: 'user')
+    user_roles.create(role_id: user_role.id)
   end
 end
