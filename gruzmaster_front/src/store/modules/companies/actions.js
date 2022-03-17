@@ -61,5 +61,31 @@ export default {
     }
 
     context.commit('setCompanies', companies);
+  },
+  async createCompany(context, data) {
+    const url = "http://localhost:3000/companies"
+
+    const headers = {
+      'Authorization': `Bearer ${context.rootGetters.token}`,
+      'Content-Type': 'application/json'
+    }
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: headers,
+      body: JSON.stringify({
+        company: {
+          company_name: data.company_name,
+          company_description: data.company_description,
+        }
+      })}
+    )
+          
+    const responseData = await response.json();
+    debugger
+    if (!response.ok) {
+      const error = new Error(responseData.messages || 'Failed to authenticate.');
+      throw error;
+    }
   }
 };
