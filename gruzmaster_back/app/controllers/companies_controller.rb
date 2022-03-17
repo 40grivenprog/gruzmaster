@@ -1,5 +1,8 @@
 class CompaniesController < ApplicationController
   before_action :find_company, only: %i[destroy]
+  before_action :authenticate_user!, only: %i[create destroy]
+  load_and_authorize_resource
+
   def index
     @companies = Company.all
     

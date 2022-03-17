@@ -6,7 +6,7 @@
       </div>
       <p class="desc">{{ company_description }}</p>
     </li>
-    <base-button @click="removeCompany" mode="delete">Delete</base-button>
+    <base-button v-if="isAdmin" @click="removeCompany" mode="delete">Delete</base-button>
   </base-card>
 </template>
 
@@ -21,6 +21,11 @@ export default {
   methods: {
     removeCompany() {
       this.$store.dispatch('companies/deleteCompany', { id: this.id });
+    }
+  },
+  computed: {
+    isAdmin(){
+      return this.$store.getters.isAdmin;
     }
   }
 }

@@ -50,8 +50,12 @@ export default {
       } catch(error) {
         this.errors = error.message.split(',');
       }
-      //this.$router.replace('/companies')
+      
       this.isLoading = false;
+
+      if(!this.errors) {
+        this.$router.replace('/companies')
+      }
     }
   }
 }

@@ -82,7 +82,6 @@ export default {
       // const error = new Error(responseData.message || 'Failed to authenticate.');
       // throw error;
     }
-    debugger
     localStorage.setItem('token', responseData.token);
     localStorage.setItem('userId', responseData.user_id);
     localStorage.setItem('isAdmin', responseData.is_admin);
@@ -97,13 +96,13 @@ export default {
     tryLogin(context) {
       const token = localStorage.getItem('token');
       const userId = localStorage.getItem('userId');
-      const is_admin = localStorage.getItem('is_admin');
+      const isAdmin = localStorage.getItem('isAdmin');
 
       if (token && userId) {
         context.commit('setUser', {
           token: token,
           userId: userId,
-          is_admin: is_admin,
+          isAdmin: isAdmin,
           tokenExpiration: null
         })
       }

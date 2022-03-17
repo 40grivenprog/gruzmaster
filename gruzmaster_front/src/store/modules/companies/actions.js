@@ -82,7 +82,7 @@ export default {
     )
           
     const responseData = await response.json();
-    debugger
+
     if (!response.ok) {
       const error = new Error(responseData.messages || 'Failed to authenticate.');
       throw error;
