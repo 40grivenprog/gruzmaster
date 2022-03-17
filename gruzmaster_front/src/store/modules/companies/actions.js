@@ -29,5 +29,37 @@ export default {
     }
 
     context.commit('setCompanies', companies);
+  },
+  async deleteCompany(context, data) {
+    const url = "http://localhost:3000/companies/" + data.id;
+    const headers = {
+      'Authorization': `Bearer ${context.rootGetters.token}`,
+      'Content-Type': 'application/json'
+    }
+
+    const response = await fetch(
+      url, {
+              method: 'DELETE',
+              headers: headers,
+              body: JSON.stringify({
+                company: {
+                  id: data.id
+                }
+              })
+            }
+    )
+
+    const responseData = await response.json();
+    const companies = []
+    for (const key in responseData) {
+      const company = {
+        id: responseData[key].id,
+        company_name: responseData[key].company_name,
+        company_description: responseData[key].company_description
+      };
+      companies.push(company);
+    }
+
+    context.commit('setCompanies', companies);
   }
 };

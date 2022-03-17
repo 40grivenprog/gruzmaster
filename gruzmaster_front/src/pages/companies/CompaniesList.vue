@@ -1,29 +1,33 @@
 <template>
   <div>
     <base-card>
-      Company Card
+      Companies
     </base-card>
     <div v-if="isLoading">
       <base-spinner></base-spinner>
     </div>
     <ul v-else-if="!isLoading && hasCompanies">
-      <company-item
-        v-for="company in companiesList"
-        :key="company.id"
-        :company_name="company.company_name"
-        :company_description="company.company_description"
-      >
-      </company-item>
+        <company-item
+          v-for="company in companiesList"
+          :key="company.id"
+          :company_name="company.company_name"
+          :company_description="company.company_description"
+          :id="company.id"
+        >
+        </company-item>
     </ul>
-    <h3 v-else>You haven't got any companies yet!</h3>
+    <base-card v-else>
+      <h3>You haven't got any companies yet!</h3>
+    </base-card>
   </div>
 </template>
 
 <script>
 import CompanyItem from '../../components/companies/CompanyItem.vue';
+import BaseCard from '../../components/ui/BaseCard.vue';
 
 export default {
-  components: { CompanyItem },
+  components: { CompanyItem, BaseCard },
   data() {
     return {
       isLoading: false,
@@ -48,7 +52,7 @@ export default {
       return this.$store.getters['companies/companies']
     },
     hasCompanies() {
-      return this.$store.getters['companies/companies']
+      return this.$store.getters['companies/companies'].length > 0
     }
   }
 }
