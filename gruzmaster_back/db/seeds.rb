@@ -10,3 +10,6 @@ user_role = Role.create(name: 'user', description: 'User')
 admin = User.create(email: "admin_user@mail.com", password: "password", password_confirmation: "password")
 
 admin.user_roles.create(role_id: admin_role.id)
+
+Company.create(company_name: "DHL", company_description: "Sneakers delivery American company")
+Company.create(company_name: "Poland Express", company_description: "Food delivery Poland company")
