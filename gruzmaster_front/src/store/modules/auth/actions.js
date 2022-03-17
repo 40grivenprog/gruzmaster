@@ -4,6 +4,11 @@ export default {
       ...payload,
       mode: 'login'
     })
+    // }).catch((error) => {
+    //   console.log(error);
+    //   console.log('2')
+    //   throw(error);
+    // })
   },
   async logout(context) {
     let headers = {
@@ -18,13 +23,13 @@ export default {
       headers: headers
       })
 
-      const responseData = await response.json();
+    const responseData = await response.json();
 
-      if (!response.ok) {
-        console.log(responseData);
-        const error = new Error(responseData.message || 'Failed to log out.');
-        throw error;
-      }
+    if (!response.ok) {
+      const error = new Error(responseData.message || 'Failed to log out.');
+      localStorage.removeItem('token');
+      throw error;
+    }
 
 
     localStorage.removeItem('token');
@@ -70,32 +75,35 @@ export default {
       })
       })
 
-      const responseData = await response.json();
+    const responseData = await response.json();
 
-      if (!response.ok) {
-        console.log(responseData);
-        const error = new Error(responseData.message || 'Failed to authenticate.');
-        throw error;
-      }
+    if (!response.ok) {
+      // console.log('1')
+      // const error = new Error(responseData.message || 'Failed to authenticate.');
+      // throw error;
+    }
+    debugger
+    localStorage.setItem('token', responseData.token);
+    localStorage.setItem('userId', responseData.user_id);
+    localStorage.setItem('isAdmin', responseData.is_admin);
 
-      localStorage.setItem('token', responseData.token);
-      localStorage.setItem('userId', responseData.user_id);
-
-      console.log(responseData);
-      context.commit('setUser', {
-        token: responseData.token,
-        userId: responseData.user_id,
-        tokenExpiration: responseData.expiresIn
-      })
+    context.commit('setUser', {
+      token: responseData.token,
+      userId: responseData.user_id,
+      is_admin: responseData.is_admin,
+      tokenExpiration: responseData.expiresIn
+    })
     },
     tryLogin(context) {
       const token = localStorage.getItem('token');
       const userId = localStorage.getItem('userId');
+      const is_admin = localStorage.getItem('is_admin');
 
       if (token && userId) {
         context.commit('setUser', {
           token: token,
           userId: userId,
+          is_admin: is_admin,
           tokenExpiration: null
         })
       }

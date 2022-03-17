@@ -71,7 +71,7 @@ export default {
       
       this.isLoading = true;
       
-      try {
+     try {
         if (this.mode === 'login') {
           await this.$store.dispatch('login', {
             email: this.email,
@@ -83,8 +83,8 @@ export default {
             password: this.password
           })
         }
-        const redirectUrl = '/' + (this.$route.query.redirect || 'members');
-        this.$router.replace(redirectUrl );
+        // const redirectUrl = '/' + (this.$route.query.redirect || 'members');
+        // this.$router.replace(redirectUrl );
       } catch (err) {
         this.error = err.message || 'Failed to authenticate.'
       }

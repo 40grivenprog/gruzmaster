@@ -1,7 +1,6 @@
 export default {
   async loadMembers (context, data){
-    console.log(context);
-    console.log(data);
+    data;
     const url = "http://localhost:3000/member-data"
     const headers = {
       'Authorization': `Bearer ${context.rootGetters.token}`,
@@ -15,7 +14,6 @@ export default {
     const responseData = await response.json();
 
     if (!response.ok) {
-      console.log(responseData);
       const error = new Error(responseData.message || 'Failed to authenticate.');
       throw error;
     }

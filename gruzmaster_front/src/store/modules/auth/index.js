@@ -7,7 +7,8 @@ export default {
     return {
       userId: null,
       token: null,
-      tokenExpiration: null
+      tokenExpiration: null,
+      isAdmin: false
     }
   },
   actions,

@@ -13,4 +13,8 @@ class User < ApplicationRecord
     user_role = Role.find_by(name: 'user')
     user_roles.create(role_id: user_role.id)
   end
+
+  def is_admin?
+    !!roles.find_by(name: 'admin')
+  end
 end
