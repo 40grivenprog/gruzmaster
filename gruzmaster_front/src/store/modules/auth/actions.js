@@ -28,14 +28,12 @@ export default {
 
     if (!response.ok) {
       const error = new Error(responseData.message || 'Failed to log out.');
-      localStorage.removeItem('token');
       throw error;
     }
 
-
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
-    
+
     context.commit('setUser', {
       token: null,
       userId: null,
@@ -76,7 +74,7 @@ export default {
         const error = new Error(responseData.messages.join("\n") || ['Failed to authenticate.']);
         throw error;
       }
-            
+
       localStorage.setItem('token', responseData.token);
       localStorage.setItem('userId', responseData.user_id);
       localStorage.setItem('isAdmin', responseData.is_admin);
@@ -84,14 +82,14 @@ export default {
       context.commit('setUser', {
         token: responseData.token,
         userId: responseData.user_id,
-        is_admin: responseData.is_admin,
+        isAdmin: responseData.is_admin,
         tokenExpiration: responseData.expiresIn
       })
     },
     tryLogin(context) {
       const token = localStorage.getItem('token');
       const userId = localStorage.getItem('userId');
-      const isAdmin = localStorage.getItem('isAdmin');
+      const isAdmin = JSON.parse(localStorage.getItem('isAdmin'));
 
       if (token && userId) {
         context.commit('setUser', {

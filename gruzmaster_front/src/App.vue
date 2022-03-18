@@ -1,5 +1,5 @@
 <template>
-  <the-header></the-header>
+  <the-header v-if="!isAuthPage"></the-header>
   <router-view v-slot="slotProps">
     <transition name="route" mode="out-in">
       
@@ -17,7 +17,12 @@ export default {
   },
   created() {
     this.$store.dispatch('tryLogin');
-  }  
+  },
+  computed: {
+    isAuthPage() {
+      return this.$route.path == "/auth";
+    }
+  }
 }
 </script>
 

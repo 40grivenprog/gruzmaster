@@ -1,7 +1,7 @@
 <template>
   <div>
     <base-card>
-      Companies
+      <router-link to="/register_company">Register new company</router-link>
     </base-card>
     <div v-if="isLoading">
       <base-spinner></base-spinner>
