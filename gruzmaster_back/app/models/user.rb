@@ -4,9 +4,14 @@ class User < ApplicationRecord
          :registerable,
          jwt_revocation_strategy: JwtDenylist
   
+  validates :email, uniqueness: true, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP } 
+  validates :password, presence: true, length: { minimum: 6 }
+
+  
   has_many :members, dependent: :destroy
   has_many :user_roles, dependent: :destroy
   has_many :roles, through: :user_roles, dependent: :destroy
+
   after_create :set_default_role
 
   def set_default_role

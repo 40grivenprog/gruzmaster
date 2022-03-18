@@ -1,14 +1,15 @@
 export default {
   async login(context, payload) {
-    context.dispatch('auth', {
+    await context.dispatch('auth', {
       ...payload,
       mode: 'login'
     })
-    // }).catch((error) => {
-    //   console.log(error);
-    //   console.log('2')
-    //   throw(error);
-    // })
+  },
+  async signup(context, payload) {
+    await context.dispatch('auth', {
+      ...payload,
+      mode: 'signup'
+    })
   },
   async logout(context) {
     let headers = {
@@ -41,12 +42,6 @@ export default {
       tokenExpiration: null
     })
   },
-  async signup(context, payload) {
-    context.dispatch('auth', {
-      ...payload,
-      mode: 'signup'
-    })
-  },
   async auth(context, payload) {
     const mode = payload.mode;
     
@@ -75,23 +70,23 @@ export default {
       })
       })
 
-    const responseData = await response.json();
+      const responseData = await response.json();
 
-    if (!response.ok) {
-      // console.log('1')
-      // const error = new Error(responseData.message || 'Failed to authenticate.');
-      // throw error;
-    }
-    localStorage.setItem('token', responseData.token);
-    localStorage.setItem('userId', responseData.user_id);
-    localStorage.setItem('isAdmin', responseData.is_admin);
+      if (!response.ok) {
+        const error = new Error(responseData.messages.join("\n") || ['Failed to authenticate.']);
+        throw error;
+      }
+            
+      localStorage.setItem('token', responseData.token);
+      localStorage.setItem('userId', responseData.user_id);
+      localStorage.setItem('isAdmin', responseData.is_admin);
 
-    context.commit('setUser', {
-      token: responseData.token,
-      userId: responseData.user_id,
-      is_admin: responseData.is_admin,
-      tokenExpiration: responseData.expiresIn
-    })
+      context.commit('setUser', {
+        token: responseData.token,
+        userId: responseData.user_id,
+        is_admin: responseData.is_admin,
+        tokenExpiration: responseData.expiresIn
+      })
     },
     tryLogin(context) {
       const token = localStorage.getItem('token');

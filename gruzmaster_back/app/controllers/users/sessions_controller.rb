@@ -7,12 +7,7 @@ class Users::SessionsController < Devise::SessionsController
     if current_user
       render json: { token: current_token, user_id: current_user.id, is_admin: current_user.is_admin?, message: 'You are logged in.' }, status: :ok
     else
-      render json: { 
-        error: { 
-          type: "unauthorized",
-          message: "Please log in" 
-          } 
-        }, status: 401
+      render json: { messages: ["Invalid login or password"] }, status: 500
     end
   end
 

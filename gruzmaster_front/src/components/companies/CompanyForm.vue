@@ -46,7 +46,7 @@ export default {
         await this.$store.dispatch('companies/createCompany', {
           company_name: this.company_name,
           company_description: this.company_description
-        });
+        })  
       } catch(error) {
         this.errors = error.message.split(',');
       }
