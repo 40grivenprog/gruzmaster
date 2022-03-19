@@ -50,6 +50,13 @@ export default {
     )
 
     const responseData = await response.json();
+    
+    if (!response.ok) {
+      const error = new Error(responseData.messages || 'Failed to delete.');
+      throw error;
+    
+    }
+    
     const companies = []
     for (const key in responseData) {
       const company = {

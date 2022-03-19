@@ -16,6 +16,7 @@ class User < ApplicationRecord
 
   def set_default_role
     user_role = Role.find_by(name: 'user')
+    user_role = Role.create(name: 'user', description: 'User') unless user_role
     user_roles.create(role_id: user_role.id)
   end
 
