@@ -4,6 +4,9 @@
       <h1>
         <router-link to="/">Gruzmaster</router-link>
       </h1>
+      <h1>
+        <p v-if="isAdmin">Admin</p>
+      </h1>
       <ul>
         <li v-if="!isLoggedIn">
           <router-link to="/auth">Login</router-link>
@@ -23,11 +26,14 @@ export default {
   computed: {
     isLoggedIn() {
       return this.$store.getters.isAuthenticated;
+    },
+    isAdmin() {
+      return this.$store.getters.isAdmin;
     }
   },
   methods: {
-    logout() {
-      this.$store.dispatch('logout');
+    async logout() {
+      await this.$store.dispatch('logout');
       this.$router.replace('/auth');
     }
   }

@@ -1,7 +1,12 @@
 <template>
   <div>
-    <base-dialog :show="!!error" title="An error occured" @close="handleError">
-      <p>{{ error }} </p>
+    <base-dialog :show="!!errors" title="An error occured" @close="handleError">
+      <ul>
+        <li :key="error" v-for="error in errors">{{error}}</li>
+      </ul>
+    </base-dialog>
+    <base-dialog :show="!!message" title="An error occured" @close="handleMessage">
+      <p>{{message}}</p>
     </base-dialog>
     <base-dialog :show="isLoading" fixed>
       <p>Authenticating</p>
@@ -17,9 +22,6 @@
           <label for="password">Password</label>
           <input type="password" id="password" v-model="password">
         </div>
-        <p v-if="!formIsValid">
-          Validation error
-        </p>
         <base-button>{{ submitButtonCaption }}</base-button>
         <base-button type="button" mode="flat" @click="switchAuthMode">{{ switchModeButtonCaption }} instead</base-button>
         </form>
@@ -39,7 +41,8 @@ export default {
       formIsValid: true,
       mode: 'login',
       isLoading: false,
-      error: null
+      errors: null,
+      message: null
     }
   },
   computed: {
@@ -60,36 +63,41 @@ export default {
   },
   methods: {
     handleError() {
-      this.error = null;
+      this.errors = null;
+    },
+    handleMessage() {
+      this.message = null;
     },
     async submitForm() {
-      this.formIsValid = true;
-      if (this.email === '' || !this.email.includes('@') || this.password.length < 6) {
-        this.formIsValid = false;
-        return;
-      }
-      
       this.isLoading = true;
       
-      try {
-        if (this.mode === 'login') {
-          await this.$store.dispatch('login', {
-            email: this.email,
-            password: this.password
-          })
-        } else {
-          await this.$store.dispatch('signup', {
-            email: this.email,
-            password: this.password
-          })
-        }
-        const redirectUrl = '/' + (this.$route.query.redirect || 'members');
-        this.$router.replace(redirectUrl );
-      } catch (err) {
-        this.error = err.message || 'Failed to authenticate.'
+      if (this.mode === 'login') {
+        await this.$store.dispatch('login', {
+          email: this.email,
+          password: this.password
+        }).catch((err) => {
+          this.errors = err.message.split("\n") || ["Failed to sinup"];
+        })
+      } else {
+        await this.$store.dispatch('signup', {
+          email: this.email,
+          password: this.password
+        }).catch((err) => {
+          this.errors = err.message.split("\n") || ["Failed to sinup"];
+        })
       }
 
       this.isLoading = false;
+      if(this.errors){
+        return;
+      }
+
+      if(this.$store.getters.isAuthenticated) {
+        this.$router.replace('/companies');
+      } else {
+        this.message = "Signed up successfully. Please login.";
+        this.mode = 'login';
+      }
     },
     switchAuthMode() {
       if (this.mode === 'login'){
